@@ -112,17 +112,21 @@ require_once 'includes/header.php';
 <?php if (count($related_articles) > 0): ?>
 <div style="margin-top: 4rem;">
     <h3 class="mb-2">You Might Also Like</h3>
-    <div class="article-grid">
+    <div class="row">
         <?php foreach ($related_articles as $related): ?>
-        <a href="article.php?id=<?= $related['id'] ?>" class="article-card">
-            <img src="<?= $related['image_url'] ? htmlspecialchars($related['image_url']) : 'https://placehold.co/300x200?text=News' ?>" class="article-thumb">
-            <div class="article-content">
-                <h4><?= htmlspecialchars($related['title']) ?></h4>
-                <div class="article-meta">
-                    <span><?= time_elapsed_string($related['created_at']) ?></span>
-                </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 article-card" style="transition: transform 0.2s;">
+                <a href="article.php?id=<?= $related['id'] ?>" style="text-decoration:none; color:inherit;">
+                    <img src="<?= $related['image_url'] ? htmlspecialchars($related['image_url']) : 'https://placehold.co/300x200?text=News' ?>" class="card-img-top" style="height: 180px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title" style="font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.4; color: var(--dark);"><?= htmlspecialchars($related['title']) ?></h5>
+                        <div class="mt-auto d-flex justify-content-between text-muted" style="font-size: 0.8rem;">
+                            <span><?= time_elapsed_string($related['created_at']) ?></span>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </a>
+        </div>
         <?php endfor; ?>
     </div>
 </div>

@@ -71,17 +71,21 @@ require_once 'includes/header.php';
             <a href="category.php?id=<?= $cat['id'] ?>" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
         </div>
         
-        <div class="article-grid">
+        <div class="row">
             <?php foreach ($cat_articles as $article): ?>
-            <a href="article.php?id=<?= $article['id'] ?>" class="article-card">
-                <img src="<?= $article['image_url'] ? htmlspecialchars($article['image_url']) : 'https://placehold.co/300x200?text=News' ?>" alt="Thumbnail" class="article-thumb">
-                <div class="article-content">
-                    <h4><?= htmlspecialchars($article['title']) ?></h4>
-                    <div class="article-meta">
-                        <span><?= time_elapsed_string($article['created_at']) ?></span>
-                    </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 shadow-sm border-0 article-card" style="transition: transform 0.2s;">
+                    <a href="article.php?id=<?= $article['id'] ?>" style="text-decoration:none; color:inherit;">
+                        <img src="<?= $article['image_url'] ? htmlspecialchars($article['image_url']) : 'https://placehold.co/300x200?text=News' ?>" alt="Thumbnail" class="card-img-top" style="height: 180px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title" style="font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.4; color: var(--dark);"><?= htmlspecialchars($article['title']) ?></h5>
+                            <div class="mt-auto d-flex justify-content-between text-muted" style="font-size: 0.8rem;">
+                                <span><?= time_elapsed_string($article['created_at']) ?></span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
+            </div>
             <?php endfor; ?>
         </div>
     </section>

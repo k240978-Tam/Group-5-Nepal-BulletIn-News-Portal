@@ -40,24 +40,28 @@ require_once 'includes/header.php';
     <?php endif; ?>
 </div>
 
-<div class="article-grid" style="margin-bottom: 4rem;">
+<div class="row mb-5">
     <?php foreach ($articles as $article): ?>
-        <a href="article.php?id=<?= $article['id'] ?>" class="article-card">
-            <img src="<?= $article['image_url'] ? htmlspecialchars($article['image_url']) : 'https://placehold.co/300x200?text=News' ?>" class="article-thumb">
-            <div class="article-content">
-                <h4><?= htmlspecialchars($article['title']) ?></h4>
-                <p class="text-gray mb-1"><?= htmlspecialchars($article['summary'] ?? get_excerpt($article['title'], 60)) ?></p>
-                <div class="article-meta">
-                    <span><?= time_elapsed_string($article['created_at']) ?></span>
-                </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 article-card" style="transition: transform 0.2s;">
+                <a href="article.php?id=<?= $article['id'] ?>" style="text-decoration:none; color:inherit;">
+                    <img src="<?= $article['image_url'] ? htmlspecialchars($article['image_url']) : 'https://placehold.co/300x200?text=News' ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title" style="font-family: var(--font-serif); color: var(--dark);"><?= htmlspecialchars($article['title']) ?></h5>
+                        <p class="card-text text-muted mb-3"><?= htmlspecialchars($article['summary'] ?? get_excerpt($article['title'], 60)) ?></p>
+                        <div class="mt-auto text-muted" style="font-size: 0.8rem;">
+                            <span><?= time_elapsed_string($article['created_at']) ?></span>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </a>
+        </div>
     <?php endforeach; ?>
     
     <?php if (count($articles) === 0): ?>
-        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 0;">
-            <i class="fas fa-folder-open text-gray" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-            <h3 class="text-gray">No articles found in this category.</h3>
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-folder-open text-muted" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <h3 class="text-muted">No articles found in this category.</h3>
         </div>
     <?php endif; ?>
 </div>
