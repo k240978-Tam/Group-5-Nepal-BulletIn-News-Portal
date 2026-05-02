@@ -4,7 +4,7 @@ require_once '../includes/functions.php';
 require_once '../includes/auth_check.php';
 
 require_role(['admin', 'editor']);
-$user = get_current_user();
+$user = get_logged_in_user();
 
 // Fetch pending articles
 $stmt = $pdo->query("SELECT a.id, a.title, u.name as author, a.created_at, c.name as category 
@@ -22,11 +22,11 @@ require_once '../includes/header.php';
     <aside class="sidebar">
         <h3>Dashboard</h3>
         <ul>
-            <li><a href="/admin/index.php"><i class="fas fa-home"></i> Overview</a></li>
-            <li><a href="/admin/editor.php"><i class="fas fa-pen"></i> Write Article</a></li>
-            <li><a href="/admin/review.php" class="active"><i class="fas fa-tasks"></i> Review Articles</a></li>
-            <li><a href="/profile.php"><i class="fas fa-user"></i> My Profile</a></li>
-            <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="/newsportal/admin/index.php"><i class="fas fa-home"></i> Overview</a></li>
+            <li><a href="/newsportal/admin/editor.php"><i class="fas fa-pen"></i> Write Article</a></li>
+            <li><a href="/newsportal/admin/review.php" class="active"><i class="fas fa-tasks"></i> Review Articles</a></li>
+            <li><a href="/newsportal/profile.php"><i class="fas fa-user"></i> My Profile</a></li>
+            <li><a href="/newsportal/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
 
@@ -52,10 +52,10 @@ require_once '../includes/header.php';
                         <td style="padding:0.5rem;"><?= htmlspecialchars($art['author']) ?></td>
                         <td style="padding:0.5rem;"><?= date('M j, Y', strtotime($art['created_at'])) ?></td>
                         <td style="padding:0.5rem;">
-                            <form action="/actions/process_article.php" method="POST" style="display:inline-flex; gap:0.5rem;">
+                            <form action="/newsportal/actions/process_article.php" method="POST" style="display:inline-flex; gap:0.5rem;">
                                 <input type="hidden" name="article_id" value="<?= $art['id'] ?>">
                                 <!-- Provide a way to view before approve, here we just edit it -->
-                                <a href="/admin/editor.php?id=<?= $art['id'] ?>" class="btn" style="background:#e2e8f0; padding:0.2rem 0.5rem; font-size:0.8rem;">Review</a>
+                                <a href="/newsportal/admin/editor.php?id=<?= $art['id'] ?>" class="btn" style="background:#e2e8f0; padding:0.2rem 0.5rem; font-size:0.8rem;">Review</a>
                                 <button type="submit" name="action" value="publish" class="btn btn-primary" style="padding:0.2rem 0.5rem; font-size:0.8rem;">Approve</button>
                                 <button type="submit" name="action" value="reject" class="btn" style="background:#ef233c; color:#fff; padding:0.2rem 0.5rem; font-size:0.8rem;">Reject</button>
                             </form>

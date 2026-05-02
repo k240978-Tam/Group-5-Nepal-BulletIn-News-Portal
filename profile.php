@@ -5,7 +5,7 @@ require_once 'includes/auth_check.php';
 
 require_login();
 
-$user = get_current_user();
+$user = get_logged_in_user();
 
 // Fetch User's Comments
 $stmt = $pdo->prepare("SELECT c.content, c.status, c.created_at, a.title, a.id as article_id 
@@ -24,11 +24,11 @@ require_once 'includes/header.php';
         <h3>My Profile</h3>
         <p class="text-gray mb-2"><?= htmlspecialchars($user['name']) ?><br><?= htmlspecialchars($user['role']) ?></p>
         <ul>
-            <li><a href="/profile.php" class="active"><i class="fas fa-comment"></i> My Comments</a></li>
+            <li><a href="/newsportal/profile.php" class="active"><i class="fas fa-comment"></i> My Comments</a></li>
             <?php if (in_array($user['role'], ['admin', 'editor', 'journalist'])): ?>
-            <li><a href="/admin/index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="/newsportal/admin/index.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <?php endif; ?>
-            <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="/newsportal/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
 
@@ -40,7 +40,7 @@ require_once 'includes/header.php';
                 <?php foreach ($comments as $comment): ?>
                     <div style="border: 1px solid var(--gray); border-radius: var(--radius-sm); padding: 1rem;">
                         <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                            <strong>On: <a href="/article.php?id=<?= $comment['article_id'] ?>" class="text-primary"><?= htmlspecialchars($comment['title']) ?></a></strong>
+                            <strong>On: <a href="/newsportal/article.php?id=<?= $comment['article_id'] ?>" class="text-primary"><?= htmlspecialchars($comment['title']) ?></a></strong>
                             <span class="category-badge" style="background: <?= $comment['status'] == 'approved' ? '#25D366' : ($comment['status'] == 'pending' ? '#FFA500' : '#FF0000') ?>;"><?= ucfirst($comment['status']) ?></span>
                         </div>
                         <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>

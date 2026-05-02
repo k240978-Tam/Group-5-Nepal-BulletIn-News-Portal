@@ -68,6 +68,6 @@ INSERT IGNORE INTO categories (name, description) VALUES
 ('Entertainment', 'Movies, music, and celebrity news.');
 
 -- Default admin user (password: Admin@123)
--- hash: $2y$10$w3G.TqS.L41H1U.R5.YkGu1F4Z1O5vTzL.vM1m/Z1A.K0j3E2R.G2
+-- hash: $2y$10$/9Ddt6OmW0lPzrQYrMsSyeawqi2Q5i7TD/fRhfD6PGNU7JHRt92yy
 INSERT IGNORE INTO users (name, email, password, role) VALUES
-('Admin User', 'admin@nepalbulletin.com', '$2y$10$w3G.TqS.L41H1U.R5.YkGu1F4Z1O5vTzL.vM1m/Z1A.K0j3E2R.G2', 'admin');
+('Admin User', 'admin@nepalbulletin.com', '$2y$10$/9Ddt6OmW0lPzrQYrMsSyeawqi2Q5i7TD/fRhfD6PGNU7JHRt92yy', 'admin');

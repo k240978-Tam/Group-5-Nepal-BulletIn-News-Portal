@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($email) || empty($password)) {
         $_SESSION['error_message'] = "Please fill in all fields.";
-        redirect('/login.php');
+        redirect('/newsportal/login.php');
     }
 
     try {
@@ -23,16 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['name'] = $user['name'];
             $_SESSION['role'] = $user['role'];
 
-            redirect('/index.php');
+            redirect('/newsportal/index.php');
         } else {
             $_SESSION['error_message'] = "Invalid email or password.";
-            redirect('/login.php');
+            redirect('/newsportal/login.php');
         }
     } catch (PDOException $e) {
         $_SESSION['error_message'] = "A system error occurred. Please try again later.";
-        redirect('/login.php');
+        redirect('/newsportal/login.php');
     }
 } else {
-    redirect('/login.php');
+    redirect('/newsportal/login.php');
 }
 ?>

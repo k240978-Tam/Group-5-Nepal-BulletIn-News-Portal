@@ -4,7 +4,7 @@ require_once '../includes/functions.php';
 require_once '../includes/auth_check.php';
 
 require_role(['admin', 'editor', 'journalist']);
-$user = get_current_user();
+$user = get_logged_in_user();
 
 // Statistics
 $stats = [];
@@ -39,13 +39,13 @@ require_once '../includes/header.php';
         <h3>Dashboard</h3>
         <p class="text-gray mb-2"><?= htmlspecialchars($user['name']) ?><br>(<?= ucfirst(htmlspecialchars($user['role'])) ?>)</p>
         <ul>
-            <li><a href="/admin/index.php" class="active"><i class="fas fa-home"></i> Overview</a></li>
-            <li><a href="/admin/editor.php"><i class="fas fa-pen"></i> Write Article</a></li>
+            <li><a href="/newsportal/admin/index.php" class="active"><i class="fas fa-home"></i> Overview</a></li>
+            <li><a href="/newsportal/admin/editor.php"><i class="fas fa-pen"></i> Write Article</a></li>
             <?php if (in_array($user['role'], ['admin', 'editor'])): ?>
-                <li><a href="/admin/review.php"><i class="fas fa-tasks"></i> Review Articles (<?= $stats['pending_articles'] ?? 0 ?>)</a></li>
+                <li><a href="/newsportal/admin/review.php"><i class="fas fa-tasks"></i> Review Articles (<?= $stats['pending_articles'] ?? 0 ?>)</a></li>
             <?php endif; ?>
-            <li><a href="/profile.php"><i class="fas fa-user"></i> My Profile</a></li>
-            <li><a href="/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="/newsportal/profile.php"><i class="fas fa-user"></i> My Profile</a></li>
+            <li><a href="/newsportal/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
 
@@ -86,9 +86,9 @@ require_once '../includes/header.php';
                     </td>
                     <td style="padding:0.5rem;"><?= date('M j, Y', strtotime($art['created_at'])) ?></td>
                     <td style="padding:0.5rem;">
-                        <a href="/admin/editor.php?id=<?= $art['id'] ?>" class="text-primary"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="/newsportal/admin/editor.php?id=<?= $art['id'] ?>" class="text-primary"><i class="fas fa-edit"></i> Edit</a>
                         <?php if ($art['status'] == 'published'): ?>
-                            <a href="/article.php?id=<?= $art['id'] ?>" target="_blank" style="margin-left:0.5rem;"><i class="fas fa-eye"></i></a>
+                            <a href="/newsportal/article.php?id=<?= $art['id'] ?>" target="_blank" style="margin-left:0.5rem;"><i class="fas fa-eye"></i></a>
                         <?php endif; ?>
                     </td>
                 </tr>

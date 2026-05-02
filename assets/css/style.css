@@ -44,38 +44,7 @@ a {
     transition: color 0.2s ease;
 }
 
-/* Utilities */
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.btn {
-    display: inline-block;
-    padding: 0.5rem 1.5rem;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-primary {
-    background-color: var(--primary);
-    color: var(--white);
-}
-
-.btn-primary:hover {
-    background-color: var(--dark);
-}
-
-.text-primary { color: var(--primary); }
-.text-gray { color: var(--gray); font-size: 0.9rem; }
-.mb-1 { margin-bottom: 0.5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.mt-2 { margin-top: 1rem; }
+/* Utilities removed to let Bootstrap handle them */
 
 /* Sticky Header */
 header {
@@ -345,56 +314,7 @@ header {
     margin-bottom: 1.5rem;
 }
 
-/* Forms & Auth */
-.auth-container {
-    max-width: 400px;
-    margin: 4rem auto;
-    background: var(--white);
-    padding: 2rem;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-}
-
-.form-group {
-    margin-bottom: 1.2rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-control {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-.alert {
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    margin-bottom: 1rem;
-}
-
-.alert-danger {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #f87171;
-}
-
-.alert-success {
-    background-color: #dcfce7;
-    color: #166534;
-    border: 1px solid #4ade80;
-}
+/* Form overrides removed for Bootstrap */
 
 /* Dashboard Sidebar */
 .dashboard-layout {

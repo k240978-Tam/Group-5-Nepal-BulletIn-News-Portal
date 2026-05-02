@@ -6,7 +6,7 @@ require_once 'includes/auth_check.php';
 $query = isset($_GET['q']) ? sanitize_input($_GET['q']) : '';
 
 if (empty($query)) {
-    redirect('/index.php');
+    redirect('/newsportal/index.php');
 }
 
 // Search articles

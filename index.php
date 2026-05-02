@@ -86,7 +86,7 @@ require_once 'includes/header.php';
                     </a>
                 </div>
             </div>
-            <?php endfor; ?>
+            <?php endforeach; ?>
         </div>
     </section>
     <?php endif; ?>

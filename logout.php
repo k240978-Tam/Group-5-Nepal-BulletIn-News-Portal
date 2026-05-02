@@ -7,5 +7,5 @@ session_destroy();
 session_start();
 
 $_SESSION['success_message'] = "You have been logged out successfully.";
-redirect('/index.php');
+redirect('/newsportal/index.php');
 ?>

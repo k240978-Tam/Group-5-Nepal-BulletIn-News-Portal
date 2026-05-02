@@ -4,7 +4,7 @@ require_once '../includes/functions.php';
 require_once '../includes/auth_check.php';
 
 require_role(['admin', 'editor', 'journalist']);
-$user = get_current_user();
+$user = get_logged_in_user();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $article_id = isset($_POST['article_id']) ? (int)$_POST['article_id'] : 0;
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("UPDATE articles SET status = ? WHERE id = ?");
         $stmt->execute([$action, $article_id]);
         $_SESSION['success_message'] = "Article " . ($action == 'publish' ? 'approved' : 'rejected') . " successfully.";
-        redirect('/admin/review.php');
+        redirect('/newsportal/admin/review.php');
     }
 
     // Creating / Editing
@@ -62,13 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$title, $content, $summary, $image_url, $user['id'], $category_id, $status]);
             $_SESSION['success_message'] = "Article created successfully.";
         }
-        redirect('/admin/index.php');
+        redirect('/newsportal/admin/index.php');
     } catch (PDOException $e) {
         $_SESSION['error_message'] = "Database error: " . $e->getMessage();
-        redirect('/admin/editor.php' . ($article_id > 0 ? "?id=$article_id" : ''));
+        redirect('/newsportal/admin/editor.php' . ($article_id > 0 ? "?id=$article_id" : ''));
     }
 
 } else {
-    redirect('/admin/index.php');
+    redirect('/newsportal/admin/index.php');
 }
 ?>

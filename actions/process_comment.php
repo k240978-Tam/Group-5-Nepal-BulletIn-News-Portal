@@ -28,6 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect("/article.php?id=$article_id");
     }
 } else {
-    redirect('/index.php');
+    redirect('/newsportal/index.php');
 }
 ?>

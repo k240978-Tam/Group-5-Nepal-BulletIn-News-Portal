@@ -9,10 +9,10 @@
                 <div class="footer-col">
                     <h4>Categories</h4>
                     <ul class="footer-links">
-                        <li><a href="/category.php?name=Politics">Politics</a></li>
-                        <li><a href="/category.php?name=Business">Business</a></li>
-                        <li><a href="/category.php?name=Sports">Sports</a></li>
-                        <li><a href="/category.php?name=Technology">Technology</a></li>
+                        <li><a href="/newsportal/category.php?name=Politics">Politics</a></li>
+                        <li><a href="/newsportal/category.php?name=Business">Business</a></li>
+                        <li><a href="/newsportal/category.php?name=Sports">Sports</a></li>
+                        <li><a href="/newsportal/category.php?name=Technology">Technology</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">

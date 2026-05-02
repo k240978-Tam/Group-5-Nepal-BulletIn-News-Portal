@@ -8,7 +8,7 @@ function is_logged_in() {
 function require_login() {
     if (!is_logged_in()) {
         $_SESSION['error_message'] = "Please log in to access this page.";
-        redirect('/login.php');
+        redirect('/newsportal/login.php');
     }
 }
 
@@ -16,11 +16,11 @@ function require_role($allowed_roles) {
     require_login();
     if (!in_array($_SESSION['role'], $allowed_roles)) {
         $_SESSION['error_message'] = "You do not have permission to access this page.";
-        redirect('/index.php');
+        redirect('/newsportal/index.php');
     }
 }
 
-function get_current_user() {
+function get_logged_in_user() {
     if (is_logged_in()) {
         return [
             'id' => $_SESSION['user_id'],

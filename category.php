@@ -13,13 +13,13 @@ if ($id > 0) {
     $stmt = $pdo->prepare("SELECT * FROM categories WHERE name = ?");
     $stmt->execute([$name]);
 } else {
-    redirect('/index.php');
+    redirect('/newsportal/index.php');
 }
 
 $category = $stmt->fetch();
 
 if (!$category) {
-    redirect('/index.php');
+    redirect('/newsportal/index.php');
 }
 
 // Fetch articles for this category

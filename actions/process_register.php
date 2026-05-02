@@ -11,22 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
         $_SESSION['error_message'] = "Please fill in all fields.";
-        redirect('/register.php');
+        redirect('/newsportal/register.php');
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error_message'] = "Please enter a valid email address.";
-        redirect('/register.php');
+        redirect('/newsportal/register.php');
     }
 
     if (strlen($password) < 8) {
         $_SESSION['error_message'] = "Password must be at least 8 characters.";
-        redirect('/register.php');
+        redirect('/newsportal/register.php');
     }
 
     if ($password !== $confirm_password) {
         $_SESSION['error_message'] = "Passwords do not match.";
-        redirect('/register.php');
+        redirect('/newsportal/register.php');
     }
 
     try {
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
             $_SESSION['error_message'] = "Email is already registered.";
-            redirect('/register.php');
+            redirect('/newsportal/register.php');
         }
 
         // Hash password
@@ -51,13 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = 'user';
         $_SESSION['success_message'] = "Registration successful. Welcome!";
 
-        redirect('/index.php');
+        redirect('/newsportal/index.php');
 
     } catch (PDOException $e) {
         $_SESSION['error_message'] = "A system error occurred. Please try again later.";
-        redirect('/register.php');
+        redirect('/newsportal/register.php');
     }
 } else {
-    redirect('/register.php');
+    redirect('/newsportal/register.php');
 }
 ?>

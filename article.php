@@ -6,7 +6,7 @@ require_once 'includes/auth_check.php';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id <= 0) {
-    redirect('/index.php');
+    redirect('/newsportal/index.php');
 }
 
 // Fetch Article
@@ -20,7 +20,7 @@ $article = $stmt->fetch();
 
 if (!$article) {
     $_SESSION['error_message'] = "Article not found.";
-    redirect('/index.php');
+    redirect('/newsportal/index.php');
 }
 
 // Update views
@@ -79,7 +79,7 @@ require_once 'includes/header.php';
     <h3 class="mb-2">Comments (<?= count($comments) ?>)</h3>
     
     <?php if (is_logged_in()): ?>
-        <form action="/actions/process_comment.php" method="POST" class="mb-2">
+        <form action="/newsportal/actions/process_comment.php" method="POST" class="mb-2">
             <input type="hidden" name="article_id" value="<?= $id ?>">
             <div class="form-group">
                 <textarea name="content" class="form-control" rows="3" placeholder="Write your comment here..." required></textarea>
@@ -88,7 +88,7 @@ require_once 'includes/header.php';
         </form>
     <?php else: ?>
         <div class="alert alert-danger" style="background-color: var(--light); color: var(--dark); border-color: var(--gray);">
-            Please <a href="/login.php" class="text-primary font-weight-500">login</a> or <a href="/register.php" class="text-primary font-weight-500">register</a> to leave a comment.
+            Please <a href="/newsportal/login.php" class="text-primary font-weight-500">login</a> or <a href="/newsportal/register.php" class="text-primary font-weight-500">register</a> to leave a comment.
         </div>
     <?php endif; ?>
     
@@ -127,7 +127,7 @@ require_once 'includes/header.php';
                 </a>
             </div>
         </div>
-        <?php endfor; ?>
+        <?php endforeach; ?>
     </div>
 </div>
 <?php endif; ?>
