@@ -1,2 +1,1 @@
-# Nepal BulletIn News Portal - M
-we are doing this with Mehedi sir
+# Nepal-bulletin-board-online-news-portal
