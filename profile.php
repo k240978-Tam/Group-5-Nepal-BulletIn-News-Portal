@@ -45,11 +45,11 @@ require_once 'includes/header.php';
 ?>
 <style>
 .profile-wrap { max-width: 900px; margin: 2.5rem auto 4rem; }
-.profile-hero { background: linear-gradient(135deg, #1e293b 0%, #c0392b 100%); border-radius: 16px; padding: 2.5rem 2rem 5rem; position: relative; color: #fff; margin-bottom: 0; }
-.profile-hero h1 { font-size: 1.6rem; font-weight: 800; margin: 0 0 .25rem; }
-.profile-hero p { margin: 0; opacity: .8; font-size: .9rem; }
+.profile-hero { background: linear-gradient(135deg, #1e293b 0%, #c0392b 100%); border-radius: 16px; padding: 2.5rem 2rem 5.5rem; position: relative; color: #fff; margin-bottom: 0; z-index: 1; }
+.profile-hero h1 { font-size: 1.8rem; font-weight: 800; margin: 0 0 .25rem; }
+.profile-hero p { margin: 0; opacity: .9; font-size: 1rem; }
 .avatar-circle { width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,.2); border: 3px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 1rem; letter-spacing: .05em; }
-.profile-body { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,.1); margin-top: -3.5rem; padding: 2rem; }
+.profile-body { background: #fff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,.12); margin-top: -3.5rem; padding: 2.5rem 2rem; position: relative; z-index: 2; }
 
 /* Stats row */
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
