@@ -85,10 +85,29 @@ require_once '../includes/header.php';
                         <span class="category-badge" style="background: <?= $art['status'] == 'published' ? '#25D366' : ($art['status'] == 'pending' ? '#FFA500' : ($art['status'] == 'rejected' ? '#FF0000' : '#8d99ae')) ?>;"><?= ucfirst($art['status']) ?></span>
                     </td>
                     <td style="padding:0.5rem;"><?= date('M j, Y', strtotime($art['created_at'])) ?></td>
-                    <td style="padding:0.5rem;">
-                        <a href="/newsportal/admin/editor.php?id=<?= $art['id'] ?>" class="text-primary"><i class="fas fa-edit"></i> Edit</a>
-                        <?php if ($art['status'] == 'published'): ?>
-                            <a href="/newsportal/article.php?id=<?= $art['id'] ?>" target="_blank" style="margin-left:0.5rem;"><i class="fas fa-eye"></i></a>
+                    <td style="padding:0.5rem; white-space:nowrap;">
+                        <a href="/newsportal/admin/editor.php?id=<?= $art['id'] ?>" class="text-primary" style="margin-right:0.5rem;"><i class="fas fa-edit"></i> Edit</a>
+                        
+                        <?php if ($art['status'] == 'published' || in_array($user['role'], ['admin', 'editor'])): ?>
+                            <a href="/newsportal/article.php?id=<?= $art['id'] ?>" target="_blank" style="margin-right:0.5rem; color:#2980b9;"><i class="fas fa-eye"></i> View</a>
+                        <?php endif; ?>
+
+                        <?php if ($art['status'] == 'pending' && in_array($user['role'], ['admin', 'editor'])): ?>
+                            <form action="/newsportal/actions/process_article.php" method="POST" style="display:inline;">
+                                <input type="hidden" name="article_id" value="<?= $art['id'] ?>">
+                                <input type="hidden" name="action" value="publish">
+                                <input type="hidden" name="redirect_to" value="/newsportal/admin/index.php">
+                                <button type="submit" class="text-primary" style="background:none; border:none; cursor:pointer; padding:0; margin-right:0.5rem; color:#27ae60; font-size:inherit;">
+                                    <i class="fas fa-check-circle"></i> Approve
+                                </button>
+                            </form>
+                        <?php endif; ?>
+
+                        <?php if (in_array($user['role'], ['admin', 'editor'])): ?>
+                            <button onclick="confirmDelete(<?= $art['id'] ?>, '<?= htmlspecialchars(addslashes(get_excerpt($art['title'], 40)), ENT_QUOTES) ?>')" 
+                                style="background:none;border:none;cursor:pointer;color:#e74c3c;font-size:0.85rem;padding:0;" title="Delete article">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -100,5 +119,49 @@ require_once '../includes/header.php';
         </table>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:2rem; max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); text-align:center;">
+        <div style="width:56px;height:56px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+            <i class="fas fa-trash-alt" style="font-size:1.4rem;color:#e74c3c;"></i>
+        </div>
+        <h4 style="margin:0 0 0.5rem;color:#1e293b;">Delete Article?</h4>
+        <p style="color:#64748b;font-size:0.9rem;margin:0 0 1.5rem;" id="deleteModalMsg">This action cannot be undone.</p>
+        <form id="deleteForm" action="/newsportal/actions/delete_article.php" method="POST">
+            <input type="hidden" name="article_id" id="deleteArticleId">
+            <div style="display:flex;gap:0.75rem;justify-content:center;">
+                <button type="button" onclick="closeDeleteModal()" 
+                    style="padding:0.6rem 1.5rem;border:1.5px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#475569;font-weight:600;cursor:pointer;">
+                    Cancel
+                </button>
+                <button type="submit" 
+                    style="padding:0.6rem 1.5rem;border:none;border-radius:8px;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;font-weight:700;cursor:pointer;">
+                    <i class="fas fa-trash-alt"></i> Yes, Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function confirmDelete(id, title) {
+    document.getElementById('deleteArticleId').value = id;
+    document.getElementById('deleteModalMsg').textContent = 'You are about to permanently delete: "' + title + '". This cannot be undone.';
+    var modal = document.getElementById('deleteModal');
+    modal.style.display = 'flex';
+}
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+// Close on backdrop click
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDeleteModal();
+});
+</script>
 
 <?php require_once '../includes/footer.php'; ?>

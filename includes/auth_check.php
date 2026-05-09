@@ -21,12 +21,11 @@ function require_role($allowed_roles) {
 }
 
 function get_logged_in_user() {
+    global $pdo;
     if (is_logged_in()) {
-        return [
-            'id' => $_SESSION['user_id'],
-            'name' => $_SESSION['name'],
-            'role' => $_SESSION['role']
-        ];
+        $stmt = $pdo->prepare("SELECT id, name, email, role, created_at FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        return $stmt->fetch();
     }
     return null;
 }

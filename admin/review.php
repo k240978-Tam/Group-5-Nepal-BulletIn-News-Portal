@@ -52,13 +52,15 @@ require_once '../includes/header.php';
                         <td style="padding:0.5rem;"><?= htmlspecialchars($art['author']) ?></td>
                         <td style="padding:0.5rem;"><?= date('M j, Y', strtotime($art['created_at'])) ?></td>
                         <td style="padding:0.5rem;">
-                            <form action="/newsportal/actions/process_article.php" method="POST" style="display:inline-flex; gap:0.5rem;">
-                                <input type="hidden" name="article_id" value="<?= $art['id'] ?>">
-                                <!-- Provide a way to view before approve, here we just edit it -->
-                                <a href="/newsportal/admin/editor.php?id=<?= $art['id'] ?>" class="btn" style="background:#e2e8f0; padding:0.2rem 0.5rem; font-size:0.8rem;">Review</a>
-                                <button type="submit" name="action" value="publish" class="btn btn-primary" style="padding:0.2rem 0.5rem; font-size:0.8rem;">Approve</button>
-                                <button type="submit" name="action" value="reject" class="btn" style="background:#ef233c; color:#fff; padding:0.2rem 0.5rem; font-size:0.8rem;">Reject</button>
-                            </form>
+                            <div style="display:inline-flex; gap:0.5rem; align-items:center;">
+                                <a href="/newsportal/article.php?id=<?= $art['id'] ?>" target="_blank" class="btn" style="background:#f1f5f9; color:#475569; padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-eye"></i> Preview</a>
+                                <a href="/newsportal/admin/editor.php?id=<?= $art['id'] ?>" class="btn" style="background:#e2e8f0; color:#1e293b; padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-edit"></i> Edit</a>
+                                <form action="/newsportal/actions/process_article.php" method="POST" style="display:inline-flex; gap:0.5rem;">
+                                    <input type="hidden" name="article_id" value="<?= $art['id'] ?>">
+                                    <button type="submit" name="action" value="publish" class="btn btn-primary" style="padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-check"></i> Approve</button>
+                                    <button type="submit" name="action" value="reject" class="btn" style="background:#ef233c; color:#fff; padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-times"></i> Reject</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
