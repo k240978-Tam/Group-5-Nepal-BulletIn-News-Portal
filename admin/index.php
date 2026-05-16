@@ -14,7 +14,7 @@ if (in_array($user['role'], ['admin', 'editor'])) {
     $stats['total_users'] = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
     
     // Recent articles for admin
-    $stmt = $pdo->query("SELECT a.id, a.title, a.status, u.name as author, a.created_at 
+    $stmt = $pdo->query("SELECT a.id, a.title, a.status, u.name as author, a.created_at, a.internal_note 
                          FROM articles a 
                          JOIN users u ON a.author_id = u.id 
                          ORDER BY a.created_at DESC LIMIT 10");
@@ -26,7 +26,7 @@ if (in_array($user['role'], ['admin', 'editor'])) {
     $stats['my_articles'] = $stmt->fetchColumn();
     
     // Journalist recent articles
-    $stmt = $pdo->prepare("SELECT id, title, status, created_at FROM articles WHERE author_id = ? ORDER BY created_at DESC LIMIT 10");
+    $stmt = $pdo->prepare("SELECT id, title, status, created_at, internal_note FROM articles WHERE author_id = ? ORDER BY created_at DESC LIMIT 10");
     $stmt->execute([$user['id']]);
     $recent_articles = $stmt->fetchAll();
 }
@@ -35,19 +35,7 @@ require_once '../includes/header.php';
 ?>
 
 <div class="dashboard-layout">
-    <aside class="sidebar">
-        <h3>Dashboard</h3>
-        <p class="text-gray mb-2"><?= htmlspecialchars($user['name']) ?><br>(<?= ucfirst(htmlspecialchars($user['role'])) ?>)</p>
-        <ul>
-            <li><a href="/newsportal/admin/index.php" class="active"><i class="fas fa-home"></i> Overview</a></li>
-            <li><a href="/newsportal/admin/editor.php"><i class="fas fa-pen"></i> Write Article</a></li>
-            <?php if (in_array($user['role'], ['admin', 'editor'])): ?>
-                <li><a href="/newsportal/admin/review.php"><i class="fas fa-tasks"></i> Review Articles (<?= $stats['pending_articles'] ?? 0 ?>)</a></li>
-            <?php endif; ?>
-            <li><a href="/newsportal/profile.php"><i class="fas fa-user"></i> My Profile</a></li>
-            <li><a href="/newsportal/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </aside>
+    <?php require 'includes/sidebar.php'; ?>
 
     <div class="dashboard-content">
         <h2 class="mb-2">Overview</h2>
@@ -77,7 +65,14 @@ require_once '../includes/header.php';
             <tbody>
                 <?php foreach ($recent_articles as $art): ?>
                 <tr style="border-bottom: 1px solid #ddd;">
-                    <td style="padding:0.5rem;"><?= htmlspecialchars(get_excerpt($art['title'], 40)) ?></td>
+                    <td style="padding:0.5rem;">
+                        <div style="font-weight:600;"><?= htmlspecialchars(get_excerpt($art['title'], 40)) ?></div>
+                        <?php if(!empty($art['internal_note'])): ?>
+                            <div style="font-size:0.75rem; color:#e74c3c; margin-top:0.2rem; background:#fff5f5; padding:0.2rem 0.5rem; border-radius:4px; display:inline-block;">
+                                <i class="fas fa-comment-dots"></i> <strong>Note:</strong> <?= htmlspecialchars($art['internal_note']) ?>
+                            </div>
+                        <?php endif; ?>
+                    </td>
                     <?php if (in_array($user['role'], ['admin', 'editor'])): ?>
                     <td style="padding:0.5rem;"><?= htmlspecialchars($art['author'] ?? 'Unknown') ?></td>
                     <?php endif; ?>

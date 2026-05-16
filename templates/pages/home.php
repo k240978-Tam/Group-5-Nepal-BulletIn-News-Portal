@@ -1,0 +1,98 @@
+<?php require BASE_PATH . '/templates/layouts/header.php'; ?>
+
+<!-- Hero Section -->
+<?php if (count($hero_articles) > 0): ?>
+<section class="hero">
+    <div class="hero-grid">
+        <!-- Main Hero -->
+        <?php $main_hero = $hero_articles[0]; ?>
+        <a href="<?= APP_URL ?>/article/<?= $main_hero['id'] ?>" class="hero-card">
+            <img src="<?= $main_hero['image_url'] ? htmlspecialchars($main_hero['image_url']) : 'https://placehold.co/800x400?text=News' ?>" alt="Hero Image">
+            <div class="hero-overlay">
+                <span class="category-badge"><?= htmlspecialchars($main_hero['category_name']) ?></span>
+                <h2><?= htmlspecialchars($main_hero['title']) ?></h2>
+                <p><?= htmlspecialchars($main_hero['summary'] ?? get_excerpt($main_hero['title'], 60)) ?></p>
+            </div>
+        </a>
+        
+        <!-- Side Heros -->
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+            <?php for ($i = 1; $i < count($hero_articles); $i++): $side_hero = $hero_articles[$i]; ?>
+            <a href="<?= APP_URL ?>/article/<?= $side_hero['id'] ?>" class="hero-card small">
+                <img src="<?= $side_hero['image_url'] ? htmlspecialchars($side_hero['image_url']) : 'https://placehold.co/400x200?text=News' ?>" alt="Side Hero">
+                <div class="hero-overlay">
+                    <span class="category-badge"><?= htmlspecialchars($side_hero['category_name']) ?></span>
+                    <h2><?= htmlspecialchars($side_hero['title']) ?></h2>
+                </div>
+            </a>
+            <?php endfor; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- Recent Nepal News Across All Categories -->
+<?php if (count($recent_nepal_news) > 0): ?>
+<section class="category-row">
+    <div class="section-title">
+        <h3>Recent Nepal News</h3>
+        <span class="text-gray" style="font-size: 0.95rem;">Latest articles from all categories published in the last 7 days.</span>
+    </div>
+    
+    <div class="row">
+        <?php foreach ($recent_nepal_news as $article): ?>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 article-card" style="transition: transform 0.2s;">
+                <a href="<?= APP_URL ?>/article/<?= $article['id'] ?>" style="text-decoration:none; color:inherit;">
+                    <img src="<?= $article['image_url'] ? htmlspecialchars($article['image_url']) : 'https://placehold.co/300x200?text=News' ?>" alt="Recent Article" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge badge-danger mb-2" style="align-self: flex-start;"><?= htmlspecialchars($article['category_name'] ?? 'Nepal') ?></span>
+                        <h5 class="card-title" style="font-family: var(--font-serif); color: var(--dark);"><?= htmlspecialchars($article['title']) ?></h5>
+                        <p class="card-text text-muted mb-3"><?= htmlspecialchars($article['summary'] ?? get_excerpt($article['title'], 70)) ?></p>
+                        <div class="mt-auto text-muted" style="font-size: 0.8rem;">
+                            <span><?= time_elapsed_string($article['created_at']) ?></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- Category Rows -->
+<?php foreach ($categories as $cat): ?>
+    <?php
+    $cat_articles = $articleModel->getArticlesByCategory($cat['id']);
+    
+    if (count($cat_articles) > 0):
+    ?>
+    <section class="category-row">
+        <div class="section-title">
+            <h3><?= htmlspecialchars($cat['name']) ?></h3>
+            <a href="<?= APP_URL ?>/category/<?= $cat['id'] ?>" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        
+        <div class="row">
+            <?php foreach ($cat_articles as $article): ?>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 shadow-sm border-0 article-card" style="transition: transform 0.2s;">
+                    <a href="<?= APP_URL ?>/article/<?= $article['id'] ?>" style="text-decoration:none; color:inherit;">
+                        <img src="<?= $article['image_url'] ? htmlspecialchars($article['image_url']) : 'https://placehold.co/300x200?text=News' ?>" alt="Thumbnail" class="card-img-top" style="height: 180px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title" style="font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.4; color: var(--dark);"><?= htmlspecialchars($article['title']) ?></h5>
+                            <div class="mt-auto d-flex justify-content-between text-muted" style="font-size: 0.8rem;">
+                                <span><?= time_elapsed_string($article['created_at']) ?></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    <?php endif; ?>
+<?php endforeach; ?>
+
+<?php require BASE_PATH . '/templates/layouts/footer.php'; ?>

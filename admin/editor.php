@@ -76,18 +76,7 @@ require_once '../includes/header.php';
 </style>
 
 <div class="dashboard-layout">
-<aside class="sidebar">
-    <h3>Dashboard</h3>
-    <ul>
-        <li><a href="/newsportal/admin/index.php"><i class="fas fa-home"></i> Overview</a></li>
-        <li><a href="/newsportal/admin/editor.php" class="active"><i class="fas fa-pen"></i> Write Article</a></li>
-        <?php if(in_array($user['role'],['admin','editor'])): ?>
-        <li><a href="/newsportal/admin/review.php"><i class="fas fa-tasks"></i> Review Articles</a></li>
-        <?php endif; ?>
-        <li><a href="/newsportal/profile.php"><i class="fas fa-user"></i> My Profile</a></li>
-        <li><a href="/newsportal/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-    </ul>
-</aside>
+<?php require 'includes/sidebar.php'; ?>
 
 <div class="dashboard-content">
 <h2 class="mb-2"><?= $article ? 'Edit Article' : 'Write New Article' ?></h2>

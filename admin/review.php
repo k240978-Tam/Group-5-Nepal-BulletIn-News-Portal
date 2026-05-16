@@ -19,16 +19,7 @@ require_once '../includes/header.php';
 ?>
 
 <div class="dashboard-layout">
-    <aside class="sidebar">
-        <h3>Dashboard</h3>
-        <ul>
-            <li><a href="/newsportal/admin/index.php"><i class="fas fa-home"></i> Overview</a></li>
-            <li><a href="/newsportal/admin/editor.php"><i class="fas fa-pen"></i> Write Article</a></li>
-            <li><a href="/newsportal/admin/review.php" class="active"><i class="fas fa-tasks"></i> Review Articles</a></li>
-            <li><a href="/newsportal/profile.php"><i class="fas fa-user"></i> My Profile</a></li>
-            <li><a href="/newsportal/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </aside>
+    <?php require 'includes/sidebar.php'; ?>
 
     <div class="dashboard-content">
         <h2 class="mb-2">Approval Queue</h2>
@@ -55,8 +46,9 @@ require_once '../includes/header.php';
                             <div style="display:inline-flex; gap:0.5rem; align-items:center;">
                                 <a href="/newsportal/article.php?id=<?= $art['id'] ?>" target="_blank" class="btn" style="background:#f1f5f9; color:#475569; padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-eye"></i> Preview</a>
                                 <a href="/newsportal/admin/editor.php?id=<?= $art['id'] ?>" class="btn" style="background:#e2e8f0; color:#1e293b; padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-edit"></i> Edit</a>
-                                <form action="/newsportal/actions/process_article.php" method="POST" style="display:inline-flex; gap:0.5rem;">
+                                <form action="/newsportal/actions/process_article.php" method="POST" style="display:inline-flex; gap:0.5rem; align-items:center;">
                                     <input type="hidden" name="article_id" value="<?= $art['id'] ?>">
+                                    <input type="text" name="internal_note" placeholder="Internal feedback..." style="font-size:0.75rem; padding:0.2rem 0.5rem; border:1px solid #ddd; border-radius:4px; width:150px;">
                                     <button type="submit" name="action" value="publish" class="btn btn-primary" style="padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-check"></i> Approve</button>
                                     <button type="submit" name="action" value="reject" class="btn" style="background:#ef233c; color:#fff; padding:0.2rem 0.5rem; font-size:0.8rem;"><i class="fas fa-times"></i> Reject</button>
                                 </form>

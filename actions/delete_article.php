@@ -30,6 +30,7 @@ if (!$article) {
 try {
     // article_tags and comments are deleted via CASCADE foreign keys
     $pdo->prepare("DELETE FROM articles WHERE id = ?")->execute([$article_id]);
+    log_action("Deleted article", "Title: " . $article['title']);
     $_SESSION['success_message'] = "Article \"" . htmlspecialchars($article['title']) . "\" has been permanently deleted.";
 } catch (PDOException $e) {
     $_SESSION['error_message'] = "Could not delete article: " . $e->getMessage();

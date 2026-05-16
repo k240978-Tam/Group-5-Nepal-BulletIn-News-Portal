@@ -89,10 +89,17 @@ require_once 'includes/header.php';
 @media(max-width: 600px) { .info-card { grid-template-columns: 1fr; } .stat-grid { grid-template-columns: repeat(2, 1fr); } }
 </style>
 
-<div class="profile-wrap">
-    <!-- Hero Banner -->
-    <div class="profile-hero">
-        <div class="avatar-circle"><?= htmlspecialchars($initials) ?></div>
+<div class="dashboard-layout">
+    <?php require_once 'admin/includes/sidebar.php'; ?>
+    <div class="dashboard-content">
+        <div class="profile-wrap">
+            <!-- Hero Banner -->
+            <div class="profile-hero">
+                <?php if (!empty($user['profile_picture'])): ?>
+                    <img src="/newsportal/uploads/<?= htmlspecialchars($user['profile_picture']) ?>" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.5);margin-bottom:1rem;display:block;">
+                <?php else: ?>
+                    <div class="avatar-circle"><?= htmlspecialchars($initials) ?></div>
+                <?php endif; ?>
         <h1><?= htmlspecialchars($user['name']) ?></h1>
         <p><?= htmlspecialchars($user['email']) ?></p>
     </div>
@@ -194,6 +201,8 @@ require_once 'includes/header.php';
 
     </div>
 </div>
+</div>
+</div>
 
 <!-- Edit Profile Modal -->
 <div id="editModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
@@ -204,7 +213,7 @@ require_once 'includes/header.php';
             <i class="fas fa-user-edit" style="color:#c0392b;"></i> Edit Profile
         </h3>
         
-        <form action="/newsportal/actions/update_profile.php" method="POST">
+        <form action="/newsportal/actions/update_profile.php" method="POST" enctype="multipart/form-data">
             <div style="margin-bottom:1.25rem;">
                 <label style="display:block; font-size:.75rem; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:.4rem;">Full Name</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" required 
@@ -215,6 +224,12 @@ require_once 'includes/header.php';
                 <label style="display:block; font-size:.75rem; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:.4rem;">Email Address</label>
                 <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required 
                     style="width:100%; padding:.75rem; border:1.5px solid #e2e8f0; border-radius:8px; font-size:.9rem;">
+            </div>
+
+            <div style="margin-bottom:1.25rem;">
+                <label style="display:block; font-size:.75rem; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:.4rem;">Profile Picture</label>
+                <input type="file" name="profile_picture" accept="image/*"
+                    style="width:100%; padding:.75rem; border:1.5px solid #e2e8f0; border-radius:8px; font-size:.9rem; background:#f8fafc;">
             </div>
             
             <div style="margin-bottom:1.5rem; padding-top:1rem; border-top:1px solid #f1f5f9;">

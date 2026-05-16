@@ -49,6 +49,11 @@ $stmt = $pdo->prepare("SELECT id, title, image_url, created_at FROM articles WHE
 $stmt->execute([$article['category_id'], $id]);
 $related = $stmt->fetchAll();
 
+// Recent News for Sidebar
+$stmt = $pdo->prepare("SELECT id, title, image_url, created_at FROM articles WHERE id != ? AND status = 'published' ORDER BY created_at DESC LIMIT 5");
+$stmt->execute([$id]);
+$recent_news = $stmt->fetchAll();
+
 $accent   = htmlspecialchars($article['article_color'] ?? '#c0392b');
 $img_pos  = $article['image_position'] ?? 'center';
 $lang_map = ['en' => '🇬🇧 English', 'ne' => '🇳🇵 Nepali', 'bilingual' => '🌐 Bilingual'];
@@ -87,7 +92,9 @@ require_once 'includes/header.php';
 .clearfix::after { content:''; display:table; clear:both; }
 </style>
 
-<div class="article-header">
+<div class="row mt-4">
+    <div class="col-lg-8 pr-lg-5">
+        <div class="article-header">
     <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem">
         <span class="category-badge"><?= htmlspecialchars($article['category_name']) ?></span>
         <?php if (!empty($article['article_type']) && $article['article_type'] !== 'standard'): ?>
@@ -155,7 +162,7 @@ require_once 'includes/header.php';
 <hr style="margin:3rem 0;border:0;border-top:1px solid #e2e8f0;">
 
 <!-- Comments -->
-<div style="max-width:800px;margin:0 auto">
+<div>
     <h3 class="mb-2">Comments (<?= count($comments) ?>)</h3>
     <?php if (is_logged_in()): ?>
         <form action="/newsportal/actions/process_comment.php" method="POST" class="mb-2">
@@ -205,5 +212,31 @@ require_once 'includes/header.php';
     </div>
 </div>
 <?php endif; ?>
+    </div> <!-- End col-lg-8 -->
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4 mt-5 mt-lg-0">
+        <div class="sidebar-recent-news sticky-top" style="top: 100px; padding-top: 1rem;">
+            <h4 class="mb-4" style="border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; display: inline-block; font-family: var(--font-serif);">Recent News</h4>
+            <div class="recent-news-list">
+                <?php foreach($recent_news as $news): ?>
+                <div class="d-flex mb-4 align-items-center">
+                    <a href="/newsportal/article.php?id=<?= $news['id'] ?>" class="flex-shrink-0">
+                        <img src="<?= $news['image_url'] ? htmlspecialchars($news['image_url']) : 'https://placehold.co/100x100?text=News' ?>" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; box-shadow: var(--shadow-sm);">
+                    </a>
+                    <div>
+                        <h6 class="mb-1" style="font-size: 0.95rem; line-height: 1.3;">
+                            <a href="/newsportal/article.php?id=<?= $news['id'] ?>" class="text-dark font-weight-bold" style="text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color=''">
+                                <?= htmlspecialchars($news['title']) ?>
+                            </a>
+                        </h6>
+                        <small class="text-muted"><i class="far fa-clock mr-1"></i><?= time_elapsed_string($news['created_at']) ?></small>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div> <!-- End col-lg-4 -->
+</div> <!-- End row -->
 
 <?php require_once 'includes/footer.php'; ?>

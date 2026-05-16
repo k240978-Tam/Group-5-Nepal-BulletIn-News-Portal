@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['name'] = $user['name'];
             $_SESSION['role'] = $user['role'];
+            
+            log_action("User login", "User ID: " . $user['id']);
 
             redirect('/newsportal/index.php');
         } else {

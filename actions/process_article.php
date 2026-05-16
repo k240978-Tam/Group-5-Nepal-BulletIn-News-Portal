@@ -17,7 +17,13 @@ $action     = $_POST['action'] ?? '';
 if ($article_id > 0 && in_array($action, ['publish', 'reject']) && empty($_POST['title'])) {
     require_role(['admin', 'editor']);
     $new_status = ($action == 'publish') ? 'published' : 'rejected';
-    $pdo->prepare("UPDATE articles SET status = ? WHERE id = ?")->execute([$new_status, $article_id]);
+    $internal_note = sanitize_input($_POST['internal_note'] ?? '');
+    
+    $stmt = $pdo->prepare("UPDATE articles SET status = ?, internal_note = ? WHERE id = ?");
+    $stmt->execute([$new_status, $internal_note, $article_id]);
+    
+    log_action(($action == 'publish' ? "Published article" : "Rejected article"), "ID: $article_id, Note: $internal_note");
+    
     $_SESSION['success_message'] = "Article " . ($new_status == 'published' ? 'approved' : 'rejected') . " successfully.";
     
     $redirect = $_POST['redirect_to'] ?? '/newsportal/admin/review.php';
