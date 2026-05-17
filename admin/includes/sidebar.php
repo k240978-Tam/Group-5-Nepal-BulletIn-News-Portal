@@ -9,8 +9,16 @@ if (in_array($user['role'], ['admin', 'editor'])) {
         $pending_articles_count = $stats['pending_articles'];
     } else {
         global $pdo;
-        $stmt = $pdo->query("SELECT COUNT(*) FROM articles WHERE status = 'pending'");
-        $pending_articles_count = $stmt->fetchColumn();
+        $db = $pdo;
+        if (!$db && class_exists('\App\Core\Database')) {
+            $db = \App\Core\Database::getInstance()->getConnection();
+        }
+        if ($db) {
+            $stmt = $db->query("SELECT COUNT(*) FROM articles WHERE status = 'pending'");
+            $pending_articles_count = $stmt->fetchColumn();
+        } else {
+            $pending_articles_count = 0;
+        }
     }
 }
 

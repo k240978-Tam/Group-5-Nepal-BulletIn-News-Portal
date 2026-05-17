@@ -33,6 +33,11 @@ class Controller
         }
     }
 
+    protected function render($name, $data = [])
+    {
+        return $this->view($name, $data);
+    }
+
     protected function redirect($path)
     {
         $url = App::get('config')['url'] . '/' . ltrim($path, '/');

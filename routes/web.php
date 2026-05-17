@@ -4,8 +4,11 @@
 
 $router->get('', 'PagesController@home');
 $router->get('article', 'ArticleController@show');
-$router->get('category', 'CategoryController@show');
-$router->get('search', 'SearchController@index');
+$router->get('article/{id}', 'ArticleController@show');
+$router->get('category', 'ArticleController@category');
+$router->get('category/{id}', 'ArticleController@category');
+$router->get('search', 'ArticleController@search');
+$router->post('chat', 'ChatController@sendMessage');
 
 // Auth routes
 $router->get('login', 'AuthController@showLoginForm');
