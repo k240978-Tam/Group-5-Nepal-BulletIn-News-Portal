@@ -4,6 +4,7 @@
 
 $router->get('', 'PagesController@home');
 $router->get('article', 'ArticleController@show');
+$router->get('article/summarize', 'ArticleController@summarize');
 $router->get('article/{id}', 'ArticleController@show');
 $router->get('category', 'ArticleController@category');
 $router->get('category/{id}', 'ArticleController@category');
