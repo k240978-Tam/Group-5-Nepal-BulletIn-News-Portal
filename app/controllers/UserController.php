@@ -1,69 +1,76 @@
 <?php
-
 namespace App\Controllers;
-
 use App\Core\Controller;
-use App\Models\User;
-use App\Models\Comment;
-use App\Core\Database;
 
-class UserController extends Controller
-{
-    public function profile()
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        if (!isset($_SESSION['user_id'])) {
-            return $this->redirect('login');
-        }
+class UserController extends Controller {
+    public function profile() {
+        $this->requireRole();
+        
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch();
+        
+        $this->view('auth/profile', ['user' => $user]);
+    }
 
-        $userModel = new User();
-        $user = $userModel->find($_SESSION['user_id']);
+    public function update() {
+        $this->requireRole();
+        $name = trim($_POST['name'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $phone_number = sanitize_input($_POST['phone_number'] ?? '');
+        $dob = !empty($_POST['dob']) ? $_POST['dob'] : null;
+        $id = $_SESSION['user_id'];
 
-        $db = Database::getInstance()->getConnection();
-
-        // Fetch user's comments with article info
-        $stmt = $db->prepare("SELECT c.content, c.status, c.created_at, a.title, a.id as article_id 
-                               FROM comments c
-                               JOIN articles a ON c.article_id = a.id
-                               WHERE c.user_id = ?
-                               ORDER BY c.created_at DESC");
-        $stmt->execute([$user['id']]);
-        $comments = $stmt->fetchAll();
-
-        // If journalist/editor/admin — fetch their article stats
-        $article_stats = null;
-        if (in_array($user['role'], ['admin', 'editor', 'journalist'])) {
-            $s = $db->prepare("SELECT
-                COUNT(*) as total,
-                SUM(status='published') as published,
-                SUM(status='draft') as drafts,
-                SUM(status='pending') as pending,
-                COALESCE(SUM(views),0) as total_views
-                FROM articles WHERE author_id = ?");
-            $s->execute([$user['id']]);
-            $article_stats = $s->fetch();
+        if (empty($name)) {
+            $_SESSION['error_message'] = "Name cannot be empty.";
+            $this->redirect('/newsportal/profile');
         }
 
-        // Avatar initials
-        $initials = strtoupper(implode('', array_map(fn($w) => $w[0], explode(' ', trim($user['name'])))));
-        $initials  = substr($initials, 0, 2);
+        // Handle profile picture upload
+        $profile_picture = null;
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+                $upload_dir = __DIR__ . '/../../public/uploads/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                $filename = 'avatar_' . $id . '_' . time() . '_' . preg_replace("/[^a-zA-Z0-9.]/", "_", basename($_FILES['profile_picture']['name']));
+                if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $upload_dir . $filename)) {
+                    $profile_picture = $filename;
+                } else {
+                    $_SESSION['error_message'] = "Failed to upload profile picture.";
+                }
+            } else {
+                $_SESSION['error_message'] = "Profile picture upload error code: " . $_FILES['profile_picture']['error'];
+            }
+        }
 
-        $role_colors = [
-            'admin'      => ['bg' => '#fee2e2', 'color' => '#c0392b', 'label' => 'Administrator'],
-            'editor'     => ['bg' => '#fef3c7', 'color' => '#92400e', 'label' => 'Editor'],
-            'journalist' => ['bg' => '#dbeafe', 'color' => '#1d4ed8', 'label' => 'Journalist'],
-            'user'       => ['bg' => '#f0fdf4', 'color' => '#166534', 'label' => 'Reader'],
-        ];
-        $rc = $role_colors[$user['role']] ?? $role_colors['user'];
+        try {
+            if ($profile_picture) {
+                if (!empty($password)) {
+                    $hashed = password_hash($password, PASSWORD_DEFAULT);
+                    $stmt = $this->pdo->prepare("UPDATE users SET name = ?, password = ?, phone_number = ?, dob = ?, profile_picture = ? WHERE id = ?");
+                    $stmt->execute([$name, $hashed, $phone_number, $dob, $profile_picture, $id]);
+                } else {
+                    $stmt = $this->pdo->prepare("UPDATE users SET name = ?, phone_number = ?, dob = ?, profile_picture = ? WHERE id = ?");
+                    $stmt->execute([$name, $phone_number, $dob, $profile_picture, $id]);
+                }
+            } else {
+                if (!empty($password)) {
+                    $hashed = password_hash($password, PASSWORD_DEFAULT);
+                    $stmt = $this->pdo->prepare("UPDATE users SET name = ?, password = ?, phone_number = ?, dob = ? WHERE id = ?");
+                    $stmt->execute([$name, $hashed, $phone_number, $dob, $id]);
+                } else {
+                    $stmt = $this->pdo->prepare("UPDATE users SET name = ?, phone_number = ?, dob = ? WHERE id = ?");
+                    $stmt->execute([$name, $phone_number, $dob, $id]);
+                }
+            }
+            $_SESSION['name'] = $name;
+            $_SESSION['success_message'] = "Profile updated successfully.";
+        } catch (\PDOException $e) {
+            $_SESSION['error_message'] = "Database error: " . $e->getMessage();
+        }
 
-        return $this->view('profile.index', [
-            'user' => $user,
-            'comments' => $comments,
-            'article_stats' => $article_stats,
-            'initials' => $initials,
-            'rc' => $rc
-        ]);
+        $this->redirect('/newsportal/profile');
     }
 }

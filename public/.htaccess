@@ -1,12 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Redirect trailing slashes
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
+    # Prevent Apache from serving directory listings — route through front controller
+    DirectorySlash Off
+    DirectoryIndex disabled
 
-    # Send requests to front controller
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [QSA,L]
+    RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>

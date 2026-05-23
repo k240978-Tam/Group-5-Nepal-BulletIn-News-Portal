@@ -1,47 +1,49 @@
 <?php
-
 namespace App\Core;
 
-class Controller
-{
-    protected $layout = 'layouts.main';
+class Controller {
+    protected $pdo;
 
-    protected function view($name, $data = [])
-    {
+    public function __construct() {
+        $this->pdo = require __DIR__ . '/../../config/database.php';
+    }
+
+    /**
+     * Render a view with data
+     */
+    protected function view($viewPath, $data = []) {
+        // Extract data to make variables available in the view
         extract($data);
-        $viewFile = VIEW_PATH . '/' . str_replace('.', '/', $name) . '.php';
         
-        if (!file_exists($viewFile)) {
-            die("View {$name} not found!");
-        }
-
-        // Buffer the view content
-        ob_start();
-        require $viewFile;
-        $content = ob_get_clean();
-
-        // Require the layout and inject the content
-        if ($this->layout) {
-            $layoutFile = VIEW_PATH . '/' . str_replace('.', '/', $this->layout) . '.php';
-            if (file_exists($layoutFile)) {
-                require $layoutFile;
-            } else {
-                echo $content;
-            }
+        $file = __DIR__ . '/../views/' . $viewPath . '.php';
+        
+        if (file_exists($file)) {
+            require $file;
         } else {
-            echo $content;
+            die("View not found: " . $viewPath);
         }
     }
 
-    protected function render($name, $data = [])
-    {
-        return $this->view($name, $data);
+    /**
+     * Redirect to a specific URL
+     */
+    protected function redirect($url) {
+        header("Location: " . $url);
+        exit;
     }
-
-    protected function redirect($path)
-    {
-        $url = App::get('config')['url'] . '/' . ltrim($path, '/');
-        header("Location: {$url}");
-        exit();
+    
+    /**
+     * Ensure user has required role
+     */
+    protected function requireRole($roles = []) {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/newsportal/login');
+        }
+        
+        if (!empty($roles)) {
+            if (!in_array($_SESSION['role'], $roles)) {
+                die("Unauthorized access.");
+            }
+        }
     }
 }
